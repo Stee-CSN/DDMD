@@ -1,12 +1,13 @@
 <?php
-// app/Models/Reservation.php
+// app/Models/RestaurantReservation.php
+
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Reservation extends Model
+class RestaurantReservation extends Model
 {
     use HasFactory;
     
@@ -14,9 +15,9 @@ class Reservation extends Model
     
     protected $fillable = [
         'user_id',
-        'name',
-        'phone',
-        'guests',
+        'customer_name',
+        'customer_phone',
+        'number_of_guests',
         'reservation_date',
         'reservation_time',
         'special_requests',
@@ -25,9 +26,7 @@ class Reservation extends Model
     
     protected $casts = [
         'reservation_date' => 'date',
-        'reservation_time' => 'datetime',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime'
+        'reservation_time' => 'datetime'
     ];
     
     public function user()

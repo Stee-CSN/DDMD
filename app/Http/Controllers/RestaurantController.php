@@ -7,27 +7,46 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-class ReservationController extends Controller
+class RestaurantController extends Controller
 {
+    /**
+     * Show the restaurant homepage
+     */
+    public function index()
+    {
+        $reservations = [];
+        if (Auth::check()) {
+            $reservations = Reservation::where('user_id', Auth::id())
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
+        
+        return view('restaurant', compact('reservations'));
+    }
+
+    /**
+     * Store a new reservation
+     */
     public function store(Request $request)
     {
+        // Debug logging
         Log::info('Reservation store attempt', [
             'user_id' => Auth::id(),
             'request_data' => $request->all()
         ]);
 
-        try {
-            // Validate the request matching your database columns
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
-                'phone' => 'required|string|max:20',
-                'guests' => 'required|integer|min:1|max:20',
-                'reservation_date' => 'required|date',
-                'reservation_time' => 'required',
-                'special_requests' => 'nullable|string|max:1000',
-            ]);
+        // Validate the request
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+            'guests' => 'required|integer|min:1|max:20',
+            'reservation_date' => 'required|date',
+            'reservation_time' => 'required',
+            'special_requests' => 'nullable|string|max:1000',
+        ]);
 
-            // Create reservation using correct column names
+        try {
+            // Create the reservation using your exact table columns
             $reservation = Reservation::create([
                 'user_id' => Auth::id(),
                 'name' => $request->name,
@@ -41,7 +60,7 @@ class ReservationController extends Controller
 
             Log::info('Reservation created successfully', ['id' => $reservation->id]);
 
-            // Return JSON response for AJAX calls
+            // Check if it's an AJAX request from the restaurant page
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => true,
@@ -50,7 +69,6 @@ class ReservationController extends Controller
                 ]);
             }
 
-            // Redirect for regular form submission
             return redirect()->route('my-reservations')
                 ->with('success', 'Reservation #' . $reservation->id . ' created successfully!');
 
@@ -64,12 +82,18 @@ class ReservationController extends Controller
                 ], 500);
             }
             
-            return back()->with('error', 'Failed to create reservation. Please try again.');
+            return back()
+                ->withInput()
+                ->with('error', 'Failed to create reservation. Please try again.');
         }
     }
 
+    /**
+     * Show user's reservations
+     */
     public function myReservations()
     {
+        // Check if user is logged in
         if (!Auth::check()) {
             return redirect()->route('login')
                 ->with('error', 'Please login to view your reservations.');
@@ -82,22 +106,15 @@ class ReservationController extends Controller
         return view('my-reservations', compact('reservations'));
     }
 
-    public function show($id)
-    {
-        $reservation = Reservation::findOrFail($id);
-        
-        if ($reservation->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized');
-        }
-
-        return view('reservation-show', compact('reservation'));
-    }
-
+    /**
+     * Cancel a reservation
+     */
     public function cancel($id)
     {
         try {
             $reservation = Reservation::findOrFail($id);
             
+            // Check if user owns this reservation
             if ($reservation->user_id !== Auth::id()) {
                 if (request()->ajax()) {
                     return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
@@ -105,37 +122,39 @@ class ReservationController extends Controller
                 abort(403, 'Unauthorized');
             }
 
+            // Check if already cancelled
             if ($reservation->status === 'cancelled') {
                 if (request()->ajax()) {
                     return response()->json(['success' => false, 'message' => 'Reservation already cancelled'], 400);
                 }
-                return redirect()->route('my-reservations')->with('error', 'Reservation already cancelled.');
+                return redirect()->route('my-reservations')
+                    ->with('error', 'Reservation already cancelled.');
             }
 
             $reservation->update(['status' => 'cancelled']);
 
             if (request()->ajax()) {
                 return response()->json([
-                    'success' => true,
+                    'success' => true, 
                     'message' => 'Reservation #' . $reservation->id . ' cancelled successfully!'
                 ]);
             }
 
             return redirect()->route('my-reservations')
-                ->with('success', 'Reservation cancelled successfully.');
+                ->with('success', 'Reservation #' . $reservation->id . ' cancelled successfully.');
 
         } catch (\Exception $e) {
             Log::error('Reservation cancellation failed: ' . $e->getMessage());
             
             if (request()->ajax()) {
                 return response()->json([
-                    'success' => false,
-                    'message' => 'Failed to cancel reservation'
+                    'success' => false, 
+                    'message' => 'Failed to cancel reservation.'
                 ], 500);
             }
             
             return redirect()->route('my-reservations')
-                ->with('error', 'Failed to cancel reservation.');
+                ->with('error', 'Failed to cancel reservation. Please try again.');
         }
     }
 }

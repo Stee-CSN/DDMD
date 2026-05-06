@@ -5,7 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>My Reservations - Yangkhel Khangza</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
+        :root {
+            --primary: #e67e22;
+            --primary-dark: #d35400;
+            --primary-light: #f39c12;
+            --secondary: #2c1810;
+            --danger: #e74c3c;
+            --success: #27ae60;
+            --bg-light: #fffaf5;
+            --bg-white: #ffffff;
+            --text-dark: #2d2a24;
+            --text-light: #5a4a3a;
+            --border: #f0e0d0;
+            --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,34 +33,37 @@
         }
 
         body {
-            font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
-            background: #fffaf5;
-            color: #2d2a24;
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
         }
 
-        /* Navigation */
+        /* NAVBAR */
         .navbar {
             position: fixed;
             top: 0;
             width: 100%;
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(12px);
+            box-shadow: var(--shadow-md);
             z-index: 1000;
             padding: 1rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
+            gap: 1.5rem;
         }
 
         .logo {
-            font-size: 1.8rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #e67e22, #f39c12);
-            background-clip: text;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             -webkit-background-clip: text;
-            color: transparent;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .nav-links {
@@ -52,34 +75,47 @@
 
         .nav-links a {
             text-decoration: none;
-            color: #4a4a4a;
+            color: var(--text-light);
             font-weight: 500;
-            transition: 0.3s;
+            transition: all 0.3s ease;
         }
 
         .nav-links a:hover {
-            color: #e67e22;
+            color: var(--primary);
         }
 
-        .nav-btn {
-            background: #e67e22;
-            color: white !important;
-            padding: 0.6rem 1.5rem;
-            border-radius: 50px;
+        .nav-links a.active {
+            color: var(--primary);
+            font-weight: 600;
         }
 
         .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            background: #f0e0d0;
-            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, rgba(230, 126, 34, 0.08), rgba(243, 156, 18, 0.05));
+            padding: 0.6rem 1.2rem;
             border-radius: 50px;
+            border: 1px solid var(--border);
+            font-weight: 500;
         }
 
-        /* Hero Section */
+        .nav-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white !important;
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn.logout {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        /* HERO SECTION */
         .hero {
-            min-height: 50vh;
+            min-height: 40vh;
             background: linear-gradient(135deg, #fff5eb 0%, #ffe8d6 100%);
             display: flex;
             align-items: center;
@@ -89,83 +125,94 @@
         }
 
         .hero-content h1 {
+            font-family: 'Playfair Display', serif;
             font-size: 3rem;
             font-weight: 800;
-            margin-bottom: 1rem;
-            color: #2c1810;
+            color: var(--secondary);
         }
 
         .hero-content p {
-            color: #5a4a3a;
+            color: var(--text-light);
             font-size: 1.1rem;
         }
 
-        /* Reservations Section */
+        /* RESERVATIONS SECTION */
         .reservations-section {
             padding: 4rem 5%;
-            background: white;
+            background: var(--bg-white);
         }
 
         .section-title {
             text-align: center;
+            font-family: 'Playfair Display', serif;
             font-size: 2.5rem;
             margin-bottom: 3rem;
-            color: #2c1810;
-            position: relative;
+            color: var(--secondary);
         }
 
         .section-title::after {
             content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
+            display: block;
             width: 80px;
-            height: 4px;
-            background: #e67e22;
+            height: 3px;
+            background: var(--primary);
+            margin: 10px auto 0;
+            border-radius: 2px;
         }
 
         .reservations-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
             gap: 2rem;
             max-width: 1400px;
             margin: 0 auto;
         }
 
         .reservation-card {
-            background: white;
-            border-radius: 20px;
+            background: var(--bg-white);
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            transition: 0.3s;
-            border: 1px solid #f0e0d0;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
         }
 
         .reservation-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            box-shadow: var(--shadow-xl);
         }
 
         .reservation-header {
-            background: linear-gradient(135deg, #e67e22, #f39c12);
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
-            padding: 1rem 1.5rem;
+            padding: 1.25rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .reservation-id {
-            font-weight: bold;
+            font-weight: 700;
             font-size: 0.9rem;
+            opacity: 0.9;
         }
 
         .status {
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-confirmed {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-cancelled {
+            background: var(--danger);
+            color: white;
         }
 
         .status-pending {
@@ -173,19 +220,21 @@
             color: white;
         }
 
-        .status-confirmed {
-            background: #27ae60;
+        .cancel-btn {
+            background: rgba(0, 0, 0, 0.3);
             color: white;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
 
-        .status-completed {
-            background: #3498db;
-            color: white;
-        }
-
-        .status-cancelled {
-            background: #e74c3c;
-            color: white;
+        .cancel-btn:hover {
+            background: rgba(0, 0, 0, 0.5);
+            transform: scale(1.05);
         }
 
         .reservation-body {
@@ -196,109 +245,98 @@
             margin-bottom: 0.8rem;
             display: flex;
             justify-content: space-between;
-            border-bottom: 1px solid #f0e0d0;
+            align-items: center;
             padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .reservation-detail:last-child {
+            border-bottom: none;
         }
 
         .detail-label {
             font-weight: 600;
-            color: #5a4a3a;
+            color: var(--text-dark);
         }
 
         .detail-value {
-            color: #2c1810;
-        }
-
-        .order-items {
-            margin-top: 1rem;
-            background: #fef9f2;
-            padding: 1rem;
-            border-radius: 12px;
-        }
-
-        .order-items h4 {
-            margin-bottom: 0.5rem;
-            color: #2c1810;
-        }
-
-        .order-item {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            padding: 0.3rem 0;
-        }
-
-        .total-amount {
-            margin-top: 1rem;
-            padding-top: 0.5rem;
-            border-top: 2px solid #e67e22;
-            display: flex;
-            justify-content: space-between;
-            font-weight: bold;
-            font-size: 1.1rem;
-            color: #e67e22;
+            color: var(--text-light);
         }
 
         .empty-state {
             text-align: center;
-            padding: 4rem;
-            background: #fef9f2;
-            border-radius: 20px;
+            padding: 3rem;
+            background: linear-gradient(135deg, #fffaf5, #fff0e6);
+            border-radius: 16px;
+            border: 2px dashed var(--border);
             grid-column: 1/-1;
+            max-width: 500px;
+            margin: 0 auto;
         }
 
         .empty-state h3 {
-            color: #2c1810;
-            margin-bottom: 1rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
         }
 
         .btn-order {
             display: inline-block;
-            background: #e67e22;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
             padding: 0.8rem 2rem;
             border-radius: 50px;
             text-decoration: none;
             margin-top: 1rem;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            font-weight: 600;
         }
 
         .btn-order:hover {
-            background: #d35400;
             transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         footer {
-            background: #1a1a1a;
+            background: var(--secondary);
             color: #aaa;
-            padding: 3rem 5%;
+            padding: 2rem;
             text-align: center;
         }
 
         @media (max-width: 768px) {
-            .reservations-grid {
-                grid-template-columns: 1fr;
+            .navbar {
+                flex-direction: column;
+                text-align: center;
+            }
+            .nav-links {
+                justify-content: center;
             }
             .hero-content h1 {
                 font-size: 2rem;
+            }
+            .reservations-grid {
+                grid-template-columns: 1fr;
+            }
+            .reservation-detail {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.3rem;
             }
         }
     </style>
 </head>
 <body>
-
     <nav class="navbar">
         <div class="logo">🍜 Yangkhel Khangza</div>
         <div class="nav-links">
             <a href="{{ url('/restaurant') }}">Home</a>
             <a href="{{ url('/restaurant#menu') }}">Menu</a>
-            <a href="{{ url('/restaurant#feedback') }}">Reviews</a>
-            <a href="{{ url('/my-reservations') }}" style="color: #e67e22; font-weight: bold;">📋 My Reservations</a>
+            <a href="{{ url('/my-reservations') }}" class="active">📋 My Reservations</a>
             @auth
                 <div class="user-info">👋 {{ Auth::user()->name }}</div>
                 <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                     @csrf
-                    <button type="submit" class="nav-btn" style="background: #e74c3c;">Logout</button>
+                    <button type="submit" class="nav-btn logout">Logout</button>
                 </form>
             @else
                 <a href="{{ route('login') }}" class="nav-btn">Login</a>
@@ -309,99 +347,149 @@
 
     <section class="hero">
         <div class="hero-content">
-            <h1>📋 My Reservations & Orders</h1>
-            <p>View all your past and upcoming reservations with order details and total amounts</p>
+            <h1>📋 My Reservations</h1>
+            <p>View and manage all your table reservations</p>
         </div>
     </section>
 
     <section class="reservations-section">
-        <h2 class="section-title">Your Reservation History</h2>
+        <h2 class="section-title">Reservation History</h2>
         
         <div class="reservations-grid">
             @forelse($reservations as $reservation)
                 <div class="reservation-card">
                     <div class="reservation-header">
-                        <span class="reservation-id">#{{ $reservation->id }}</span>
-                        <span class="status status-{{ $reservation->status }}">
-                            {{ ucfirst($reservation->status) }}
-                        </span>
+                        <div>
+                            <div class="reservation-id">Reservation #{{ $reservation->id }}</div>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <span class="status status-{{ $reservation->status }}">
+                                {{ ucfirst($reservation->status) }}
+                            </span>
+                            @if($reservation->status != 'cancelled')
+                                <button onclick="cancelReservation({{ $reservation->id }})" class="cancel-btn">
+                                    ❌ Cancel
+                                </button>
+                            @endif
+                        </div>
                     </div>
                     
                     <div class="reservation-body">
                         <div class="reservation-detail">
-                            <span class="detail-label">📅 Date & Time:</span>
-                            <span class="detail-value">
-                                @if($reservation->reservation_datetime)
-                                    {{ \Carbon\Carbon::parse($reservation->reservation_datetime)->format('M d, Y h:i A') }}
-                                @else
-                                    Takeaway Order
-                                @endif
-                            </span>
+                            <span class="detail-label">👤 Name:</span>
+                            <span class="detail-value">{{ $reservation->name }}</span>
                         </div>
                         
                         <div class="reservation-detail">
-                            <span class="detail-label">🍽️ Dining Type:</span>
-                            <span class="detail-value">{{ $reservation->dining_type == 'eat-in' ? 'Eat In Restaurant' : 'Takeaway' }}</span>
+                            <span class="detail-label">📞 Phone:</span>
+                            <span class="detail-value">{{ $reservation->phone }}</span>
                         </div>
                         
                         <div class="reservation-detail">
-                            <span class="detail-label">👥 People:</span>
-                            <span class="detail-value">{{ $reservation->people_count }} {{ $reservation->people_count == 1 ? 'person' : 'people' }}</span>
+                            <span class="detail-label">👥 Guests:</span>
+                            <span class="detail-value">{{ $reservation->guests }} person(s)</span>
                         </div>
                         
                         <div class="reservation-detail">
-                            <span class="detail-label">📞 Contact:</span>
-                            <span class="detail-value">{{ $reservation->customer_phone }}</span>
+                            <span class="detail-label">📅 Date:</span>
+                            <span class="detail-value">{{ \Carbon\Carbon::parse($reservation->reservation_date)->format('F j, Y') }}</span>
                         </div>
                         
-                        @if($reservation->order_items && count($reservation->order_items) > 0)
-                            <div class="order-items">
-                                <h4>🍜 Order Items:</h4>
-                                @foreach($reservation->order_items as $item)
-                                    <div class="order-item">
-                                        <span>{{ $item['name'] }} x{{ $item['quantity'] }}</span>
-                                        <span>Nu. {{ number_format(floatval(str_replace('Nu.', '', $item['price'])) * $item['quantity'], 2) }}</span>
-                                    </div>
-                                @endforeach
-                                <div class="total-amount">
-                                    <span>💰 Total Amount:</span>
-                                    <span>Nu. {{ number_format($reservation->order_total, 2) }}</span>
-                                </div>
-                            </div>
-                        @else
-                            <div class="order-items">
-                                <p style="color: #999; text-align: center;">No food items ordered</p>
-                            </div>
-                        @endif
+                        <div class="reservation-detail">
+                            <span class="detail-label">⏰ Time:</span>
+                            <span class="detail-value">{{ \Carbon\Carbon::parse($reservation->reservation_time)->format('g:i A') }}</span>
+                        </div>
                         
                         @if($reservation->special_requests)
-                            <div class="reservation-detail" style="margin-top: 0.8rem;">
-                                <span class="detail-label">💬 Special Request:</span>
+                            <div class="reservation-detail">
+                                <span class="detail-label">💬 Requests:</span>
                                 <span class="detail-value">{{ $reservation->special_requests }}</span>
                             </div>
                         @endif
                         
-                        <div class="reservation-detail" style="margin-top: 0.8rem;">
+                        <div class="reservation-detail">
                             <span class="detail-label">📅 Booked on:</span>
-                            <span class="detail-value">{{ $reservation->created_at->format('M d, Y h:i A') }}</span>
+                            <span class="detail-value">{{ $reservation->created_at->format('M d, Y g:i A') }}</span>
                         </div>
                     </div>
                 </div>
             @empty
                 <div class="empty-state">
                     <h3>📭 No Reservations Yet</h3>
-                    <p>You haven't made any reservations or orders yet.</p>
-                    <a href="{{ url('/restaurant') }}" class="btn-order">Make a Reservation & Order Food</a>
+                    <p>You haven't made any table reservations yet.</p>
+                    <a href="{{ url('/restaurant') }}" class="btn-order">📅 Make a Reservation</a>
                 </div>
             @endforelse
         </div>
     </section>
 
     <footer>
-        <p>&copy; 2025 Yangkhel Khangza. All rights reserved.</p>
-        <p>📍 Dewathang, Bhutan | 📞 +975 1234 5678 | ✉️ hello@yangkhel.bt</p>
-        <p style="margin-top: 0.5rem;">⏰ Open Daily: 11:00 AM - 10:00 PM</p>
+        <p><strong>🍜 Yangkhel Khangza</strong> - Authentic Bhutanese Cuisine</p>
+        <p>📍 Dewathang, Bhutan | 📞 77299776 / 77827571</p>
+        <p>© 2025 Yangkhel Khangza. All rights reserved.</p>
     </footer>
 
+    <script>
+        function cancelReservation(id) {
+            Swal.fire({
+                title: 'Cancel Reservation?',
+                text: 'Are you sure you want to cancel this reservation?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#e74c3c',
+                cancelButtonColor: '#95a5a6',
+                confirmButtonText: 'Yes, cancel it!',
+                cancelButtonText: 'No, keep it',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Processing...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    fetch(`/reservation/${id}/cancel`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        credentials: 'same-origin'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Cancelled!',
+                                text: data.message,
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: data.message || 'Failed to cancel reservation.'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Network error. Please try again.'
+                        });
+                    });
+                }
+            });
+        }
+    </script>
 </body>
 </html>

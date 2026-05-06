@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Yangkhel Khangza - Authentic Bhutanese Restaurant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
@@ -118,6 +120,59 @@
         .info-card .icon { font-size: 40px; margin-bottom: 10px; }
         .info-card h3 { color: #FF8C00; margin-bottom: 8px; }
         .info-card p { color: #666; }
+        
+        /* Order Type Selection */
+        .order-type-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .order-type-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .order-type-btn {
+            flex: 1;
+            max-width: 250px;
+            padding: 20px;
+            border: 2px solid #FF8C00;
+            background: white;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-align: center;
+        }
+        
+        .order-type-btn.active {
+            background: #FF8C00;
+            color: white;
+        }
+        
+        .order-type-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255,140,0,0.3);
+        }
+        
+        .order-type-btn .icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .order-type-btn h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .order-type-btn p {
+            font-size: 12px;
+            opacity: 0.8;
+        }
         
         /* Menu Category Buttons */
         .menu-categories {
@@ -365,7 +420,7 @@
         .overlay.active { display: block; }
         
         /* Dine-in Reservation Modal */
-        .reservation-modal {
+        .modal {
             display: none;
             position: fixed;
             top: 50%;
@@ -376,59 +431,49 @@
             padding: 30px;
             max-width: 500px;
             width: 90%;
-            z-index: 1001;
+            z-index: 1002;
+            max-height: 90vh;
+            overflow-y: auto;
         }
         
-        .reservation-modal.active { display: block; }
+        .modal.active { display: block; }
         
-        .reservation-modal h3 { color: #FF8C00; margin-bottom: 20px; text-align: center; }
-        .reservation-modal .form-group { margin-bottom: 15px; }
-        .reservation-modal input, .reservation-modal select, .reservation-modal textarea {
+        .modal-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-header h3 { color: #FF8C00; font-size: 24px; }
+        .modal-header p { color: #666; font-size: 14px; }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 8px;
         }
         
-        .reservation-section {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            padding: 40px;
-            border-radius: 20px;
-            margin-top: 30px;
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
         }
         
-        .reservation-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            padding: 35px;
-        }
-        
-        .reservation-container h3 { text-align: center; color: #FF8C00; margin-bottom: 25px; font-size: 28px; }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; color: #555; }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-        
-        .btn-reserve {
-            background: #FF8C00;
-            color: #222;
-            border: none;
+        .modal-buttons button {
+            flex: 1;
             padding: 12px;
+            border: none;
             border-radius: 10px;
-            font-weight: bold;
             cursor: pointer;
-            width: 100%;
-            font-size: 16px;
+            font-weight: bold;
         }
         
+        .btn-confirm { background: #FF8C00; color: #222; }
+        .btn-cancel { background: #ccc; color: #555; }
+        
+        /* My Orders Section */
         .orders-section {
             background: white;
             border-radius: 20px;
@@ -437,29 +482,81 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
         }
         
-        .empty-orders { text-align: center; padding: 50px; color: #888; }
-        .login-prompt { text-align: center; padding: 40px; background: #f8f9fa; border-radius: 15px; }
-        .login-prompt a { color: #FF8C00; text-decoration: none; font-weight: bold; }
-        
-        /* Scroll to top button */
-        .scroll-top {
-            position: fixed;
-            bottom: 100px;
-            right: 30px;
-            background: #FF8C00;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
+        .tabs {
             display: flex;
-            align-items: center;
-            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
             cursor: pointer;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            z-index: 98;
+            font-weight: bold;
+            color: #666;
             transition: 0.3s;
         }
         
-        .scroll-top:hover { transform: scale(1.1); }
+        .tab-btn.active {
+            color: #FF8C00;
+            border-bottom: 2px solid #FF8C00;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .orders-grid {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .order-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 15px;
+            border: 1px solid #eee;
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .order-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-confirmed { background: #d4edda; color: #155724; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+        
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #888;
+        }
+        
+        .login-prompt {
+            text-align: center;
+            padding: 40px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+        
+        .login-prompt a { color: #FF8C00; text-decoration: none; font-weight: bold; }
         
         footer { background: #1a1a1a; color: white; text-align: center; padding: 30px; margin-top: 50px; }
         
@@ -467,11 +564,9 @@
             header { flex-direction: column; gap: 15px; text-align: center; }
             .slide-overlay h1 { font-size: 28px; }
             .hero-slideshow { height: 350px; }
-            .form-row { grid-template-columns: 1fr; }
             .menu-grid { grid-template-columns: 1fr; }
             .cart-sidebar { width: 100%; right: -100%; }
-            .menu-categories { gap: 8px; }
-            .cat-btn { padding: 6px 12px; font-size: 12px; }
+            .order-type-btn { max-width: 100%; }
         }
     </style>
 </head>
@@ -509,16 +604,16 @@
     <div class="hero-slideshow">
         <div class="slideshow-container">
             <div class="slide active" style="background-image: url('{{ asset('images/restaurant/slide1.jpg') }}');">
-                <div class="slide-overlay"><h1> Yangkhel Khangza</h1><p>Experience Authentic Bhutanese Cuisine</p></div>
+                <div class="slide-overlay"><h1>Yangkhel Khangza</h1><p>Experience Authentic Bhutanese Cuisine</p></div>
             </div>
             <div class="slide" style="background-image: url('{{ asset('images/restaurant/slide2.jpg') }}');">
                 <div class="slide-overlay"><h1>Traditional Flavors</h1><p>Authentic recipes passed down through generations</p></div>
             </div>
             <div class="slide" style="background-image: url('{{ asset('images/restaurant/slide3.jpg') }}');">
-                <div class="slide-overlay"><h1> Spicy & Flavorful</h1><p>Fresh ingredients, rich flavors</p></div>
+                <div class="slide-overlay"><h1>Spicy & Flavorful</h1><p>Fresh ingredients, rich flavors</p></div>
             </div>
             <div class="slide" style="background-image: url('{{ asset('images/restaurant/slide4.jpg') }}');">
-                <div class="slide-overlay"><h1> Taste of the Himalayas</h1><p>Unforgettable dining experience</p></div>
+                <div class="slide-overlay"><h1>Taste of the Himalayas</h1><p>Unforgettable dining experience</p></div>
             </div>
             <div class="slide-dots">
                 <span class="dot active" onclick="currentSlide(0)"></span>
@@ -537,15 +632,31 @@
             <div class="info-card"><div class="icon">🍽️</div><h3>Service</h3><p>Dine-in • Takeaway</p></div>
         </div>
 
+        <!-- Order Type Selection -->
+        <div class="order-type-section" id="orderTypeSection">
+            <div class="order-type-buttons">
+                <div class="order-type-btn" data-type="dinein">
+                    <div class="icon">🍽️</div>
+                    <h3>Dine In</h3>
+                    <p>Enjoy your meal at our restaurant</p>
+                </div>
+                <div class="order-type-btn" data-type="takeaway">
+                    <div class="icon">📦</div>
+                    <h3>Take Away</h3>
+                    <p>Order food for pickup</p>
+                </div>
+            </div>
+        </div>
+
         <!-- Menu Category Buttons -->
         <div class="menu-categories" id="menuCategories">
-            <button class="cat-btn" data-section="starters"> Starters</button>
-            <button class="cat-btn" data-section="maincourse"> Main Course</button>
-            <button class="cat-btn" data-section="curries"> Curries & Datshi</button>
-            <button class="cat-btn" data-section="noodles"> Noodles & Soups</button>
-            <button class="cat-btn" data-section="hotdrinks"> Hot Drinks</button>
-            <button class="cat-btn" data-section="colddrinks"> Cold Drinks</button>
-            <button class="cat-btn" data-section="snacks"> Snacks & Extras</button>
+            <button class="cat-btn" data-section="starters">🍢 Starters</button>
+            <button class="cat-btn" data-section="maincourse">🍛 Main Course</button>
+            <button class="cat-btn" data-section="curries">🥘 Curries & Datshi</button>
+            <button class="cat-btn" data-section="noodles">🍜 Noodles & Soups</button>
+            <button class="cat-btn" data-section="hotdrinks">☕ Hot Drinks</button>
+            <button class="cat-btn" data-section="colddrinks">🥤 Cold Drinks</button>
+            <button class="cat-btn" data-section="snacks">🍿 Snacks & Extras</button>
         </div>
 
         <!-- Menu Sections -->
@@ -557,70 +668,105 @@
         <div id="colddrinks" class="menu-section"><h2 class="section-title">🥤 Cold Drinks</h2><div class="menu-grid" id="colddrinks-menu"></div></div>
         <div id="snacks" class="menu-section"><h2 class="section-title">🍿 Snacks & Extras</h2><div class="menu-grid" id="snacks-menu"></div></div>
 
-        <!-- Reservation Section -->
-        <div class="reservation-section" id="reservation">
-            <div class="reservation-container">
-                <h3> Make a Reservation</h3>
-                @auth
-                    <div class="form-row">
-                        <div class="form-group"><label>Full Name</label><input type="text" id="resName" value="{{ Auth::user()->name }}"></div>
-                        <div class="form-group"><label>Phone Number</label><input type="tel" id="resPhone" value="{{ Auth::user()->phone }}"></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Guests</label><select id="resGuests"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6+</option></select></div>
-                        <div class="form-group"><label>Date</label><input type="date" id="resDate" min="{{ date('Y-m-d') }}"></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Time</label><select id="resTime"><option>10:00</option><option>11:00</option><option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option><option>19:00</option><option>20:00</option><option>21:00</option></select></div>
-                        <div class="form-group"><label>Requests</label><textarea id="resRequests" rows="1"></textarea></div>
-                    </div>
-                    <button class="btn-reserve" onclick="submitReservation()">Reserve Table</button>
-                @else
-                    <div class="login-prompt"><p>Please <a href="{{ route('login') }}">login</a> to make a reservation</p></div>
-                @endauth
-            </div>
-        </div>
-
-        <!-- Orders Section -->
+        <!-- My Orders Section -->
         <div class="orders-section" id="orders">
-            <h2 class="section-title"> My Orders & Reservations</h2>
+            <h2 class="section-title">📋 My Orders & Reservations</h2>
             @auth
-                <div id="ordersList"></div>
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="orders">🛒 Food Orders</button>
+                    <button class="tab-btn" data-tab="reservations">📅 Table Reservations</button>
+                </div>
+                <div id="orders-tab" class="tab-content active">
+                    <div id="ordersList"></div>
+                </div>
+                <div id="reservations-tab" class="tab-content">
+                    <div id="reservationsList"></div>
+                </div>
             @else
-                <div class="login-prompt"><p> Please <a href="{{ route('login') }}">login</a> to view your orders</p></div>
+                <div class="login-prompt"><p>🔐 Please <a href="{{ route('login') }}">login</a> to view your orders and reservations</p></div>
             @endauth
         </div>
     </div>
 
     <!-- Cart Sidebar -->
     <div class="cart-sidebar" id="cartSidebar">
-        <div class="cart-header"><h3>🛒 Your Order</h3><button class="close-cart" onclick="closeCart()">×</button></div>
-        <div class="cart-items" id="cartItems"><div style="text-align:center;padding:40px;color:#888;">Your cart is empty</div></div>
+        <div class="cart-header"><h3>🛒 Your Cart</h3><button class="close-cart" onclick="closeCart()">×</button></div>
+        <div class="cart-items" id="cartItems"><div class="empty-state">Your cart is empty</div></div>
         <div class="cart-footer">
-            <div class="cart-total"><span>Subtotal:</span><span id="cartTotal">Nu. 0</span></div>
-            <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
-            <p style="font-size:11px;color:#888;text-align:center;margin-top:10px;">🍽️ Pay at restaurant</p>
+            <div class="cart-total"><span>Total:</span><span id="cartTotal">Nu. 0</span></div>
+            <button class="checkout-btn" onclick="proceedToCheckout()">Proceed to Checkout</button>
+            <p style="font-size:11px;color:#888;text-align:center;margin-top:10px;">💰 Pay at restaurant</p>
         </div>
     </div>
 
-    <div class="cart-icon" onclick="openCart()">🛒<span class="cart-count" id="cartCount">0</span></div>
+    <!-- Cart Icon -->
+    <div class="cart-icon" onclick="openCart()">
+        🛒
+        <span class="cart-count" id="cartCount">0</span>
+    </div>
     <div class="overlay" id="overlay" onclick="closeCart()"></div>
-    <div class="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
 
     <!-- Dine-in Reservation Modal -->
-    <div class="reservation-modal" id="dineinModal">
-        <h3> Complete Your Dine-in Reservation</h3>
-        <div class="form-group"><label>Full Name</label><input type="text" id="dineinName" value="{{ Auth::user()->name ?? '' }}"></div>
-        <div class="form-group"><label>Phone Number</label><input type="tel" id="dineinPhone" value="{{ Auth::user()->phone ?? '' }}"></div>
-        <div class="form-group"><label>Number of Guests</label><select id="dineinGuests"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6+</option></select></div>
-        <div class="form-group"><label>Reservation Date</label><input type="date" id="dineinDate" min="{{ date('Y-m-d') }}"></div>
-        <div class="form-group"><label>Reservation Time</label><select id="dineinTime"><option>10:00</option><option>11:00</option><option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option><option>19:00</option><option>20:00</option><option>21:00</option></select></div>
-        <div class="form-group"><label>Special Requests</label><textarea id="dineinRequests" rows="2"></textarea></div>
-        <button class="btn-reserve" onclick="confirmDineInOrder()">Confirm Reservation & Order</button>
-        <button class="btn-reserve" style="background:#ccc; margin-top:10px;" onclick="closeDineinModal()">Cancel</button>
+    <div class="modal" id="dineinModal">
+        <div class="modal-header">
+            <h3>🍽️ Complete Your Dine-in Order</h3>
+            <p>Please provide table reservation details</p>
+        </div>
+        <form id="dineinForm">
+            <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" id="dineinName" value="{{ Auth::user()->name ?? '' }}" required>
+            </div>
+            <div class="form-group">
+                <label>Phone Number *</label>
+                <input type="tel" id="dineinPhone" value="{{ Auth::user()->phone ?? '' }}" required>
+            </div>
+            <div class="form-group">
+                <label>Number of Guests *</label>
+                <select id="dineinGuests" required>
+                    <option value="1">1 Guest</option>
+                    <option value="2">2 Guests</option>
+                    <option value="3">3 Guests</option>
+                    <option value="4">4 Guests</option>
+                    <option value="5">5 Guests</option>
+                    <option value="6">6+ Guests</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Reservation Date *</label>
+                <input type="date" id="dineinDate" min="{{ date('Y-m-d') }}" required>
+            </div>
+            <div class="form-group">
+                <label>Reservation Time *</label>
+                <select id="dineinTime" required>
+                    <option value="10:00">10:00 AM</option>
+                    <option value="11:00">11:00 AM</option>
+                    <option value="12:00">12:00 PM</option>
+                    <option value="13:00">1:00 PM</option>
+                    <option value="14:00">2:00 PM</option>
+                    <option value="15:00">3:00 PM</option>
+                    <option value="16:00">4:00 PM</option>
+                    <option value="17:00">5:00 PM</option>
+                    <option value="18:00">6:00 PM</option>
+                    <option value="19:00">7:00 PM</option>
+                    <option value="20:00">8:00 PM</option>
+                    <option value="21:00">9:00 PM</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Special Requests</label>
+                <textarea id="dineinRequests" rows="2" placeholder="Any special requests?"></textarea>
+            </div>
+            <div class="modal-buttons">
+                <button type="button" class="btn-confirm" onclick="confirmDineInOrder()">Confirm Order</button>
+                <button type="button" class="btn-cancel" onclick="closeDineinModal()">Cancel</button>
+            </div>
+        </form>
     </div>
 
-    <footer><p>&copy; 2024 Yangkhel Khangza - Yosel Enterprise. All rights reserved.</p></footer>
+    <footer>
+        <p>&copy; 2024 Yangkhel Khangza - Yosel Enterprise. All rights reserved.</p>
+    </footer>
 
     <script>
         // Slideshow
@@ -643,18 +789,7 @@
         function currentSlide(index) { showSlide(index); clearInterval(slideInterval); slideInterval = setInterval(changeSlide, 5000); }
         let slideInterval = setInterval(changeSlide, 5000);
 
-        // Category buttons - smooth scroll
-        document.querySelectorAll('.cat-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const section = this.getAttribute('data-section');
-                const element = document.getElementById(section);
-                if (element) {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-
-        // Complete Menu Data (65+ items with image paths)
+        // Complete Menu Data - YOUR EXACT MENU (All 63 items preserved)
         const menuData = {
             starters: [
                 { id: 1, name: "Chicken Chilli", price: 190, desc: "Sautéed chicken with vegetables and seasoned with sauce", img: "{{ asset('images/menu/chicken-chilli.jpg') }}", defaultImg: "🍗" },
@@ -738,7 +873,7 @@
         let cart = [];
         let orders = [];
         let reservations = [];
-        let pendingOrderType = null;
+        let selectedOrderType = null;
 
         function loadMenu() {
             loadCategory(menuData.starters, 'starters-menu');
@@ -760,8 +895,8 @@
                         <div class="menu-header"><span class="menu-name">${item.name}</span><span class="menu-price">Nu. ${item.price}</span></div>
                         <div class="menu-desc">${item.desc}</div>
                         <div class="order-options">
-                            <button class="btn-dinein" onclick="addToCartWithType(${item.id}, 'Dine-in')">🍽️ Dine-in</button>
-                            <button class="btn-takeaway" onclick="addToCartWithType(${item.id}, 'Takeaway')">📦 Takeaway</button>
+                            <button class="btn-dinein" onclick="addToCart(${item.id}, 'Dine-in')">🍽️ Dine-in</button>
+                            <button class="btn-takeaway" onclick="addToCart(${item.id}, 'Takeaway')">📦 Takeaway</button>
                         </div>
                     </div>
                 </div>
@@ -776,28 +911,60 @@
             return null;
         }
 
-        function addToCartWithType(id, orderType) {
+        function addToCart(id, orderType) {
+            if (!selectedOrderType) {
+                Swal.fire({
+                    title: 'Select Order Type',
+                    text: 'Please select Dine-in or Takeaway first',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+            
+            if (selectedOrderType !== orderType) {
+                Swal.fire({
+                    title: 'Order Type Mismatch',
+                    text: `You have selected ${selectedOrderType} mode. Please switch to ${orderType} mode or clear your cart.`,
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+            
             let item = findItem(id);
             if (item) {
-                let existing = cart.find(c => c.id === id && c.orderType === orderType);
-                if (existing) existing.quantity++;
-                else cart.push({...item, quantity: 1, orderType: orderType});
+                let existing = cart.find(c => c.id === id);
+                if (existing) {
+                    existing.quantity++;
+                } else {
+                    cart.push({...item, quantity: 1});
+                }
                 updateCart();
-                showNotification(`${item.name} added (${orderType})!`, 'success');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Added!',
+                    text: `${item.name} added to cart!`,
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
             }
         }
 
         function updateCart() {
-            let total = cart.reduce((s,i) => s + (i.price * i.quantity), 0);
-            let items = cart.reduce((s,i) => s + i.quantity, 0);
+            let total = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+            let items = cart.reduce((sum, i) => sum + i.quantity, 0);
             document.getElementById('cartCount').innerText = items;
             document.getElementById('cartTotal').innerText = `Nu. ${total}`;
             
-            let container = document.getElementById('cartItems');
+            const container = document.getElementById('cartItems');
             if (cart.length === 0) {
-                container.innerHTML = '<div style="text-align:center;padding:40px;color:#888;">Your cart is empty</div>';
+                container.innerHTML = '<div class="empty-state">Your cart is empty</div>';
                 return;
             }
+            
             container.innerHTML = cart.map(i => `
                 <div class="cart-item">
                     <div class="cart-item-img"><img src="${i.img}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='${i.defaultImg}'"></div>
@@ -805,38 +972,37 @@
                         <div class="cart-item-title">${i.name}</div>
                         <div class="cart-item-price">Nu. ${i.price}</div>
                         <div class="cart-item-quantity">
-                            <button class="quantity-btn" onclick="updateQty(${i.id}, '${i.orderType}', ${i.quantity-1})">-</button>
+                            <button class="quantity-btn" onclick="updateQuantity(${i.id}, ${i.quantity - 1})">-</button>
                             <span>${i.quantity}</span>
-                            <button class="quantity-btn" onclick="updateQty(${i.id}, '${i.orderType}', ${i.quantity+1})">+</button>
+                            <button class="quantity-btn" onclick="updateQuantity(${i.id}, ${i.quantity + 1})">+</button>
                         </div>
                     </div>
                 </div>
             `).join('');
         }
 
-        function updateQty(id, orderType, qty) {
-            if (qty <= 0) {
-                cart = cart.filter(i => !(i.id === id && i.orderType === orderType));
+        function updateQuantity(id, newQty) {
+            if (newQty <= 0) {
+                cart = cart.filter(i => i.id !== id);
             } else {
-                let item = cart.find(i => i.id === id && i.orderType === orderType);
-                if (item) item.quantity = qty;
+                let item = cart.find(i => i.id === id);
+                if (item) item.quantity = newQty;
             }
             updateCart();
         }
 
-        function checkout() {
+        function proceedToCheckout() {
             if (cart.length === 0) {
-                showNotification('Your cart is empty!', 'error');
+                Swal.fire('Error', 'Your cart is empty!', 'error');
                 return;
             }
             
-            const orderTypes = [...new Set(cart.map(i => i.orderType))];
-            
-            if (orderTypes.includes('Dine-in')) {
-                pendingOrderType = 'Dine-in';
+            if (selectedOrderType === 'Dine-in') {
                 openDineinModal();
-            } else {
+            } else if (selectedOrderType === 'Takeaway') {
                 placeOrder('Takeaway');
+            } else {
+                Swal.fire('Select Order Type', 'Please select Dine-in or Takeaway first', 'warning');
             }
         }
 
@@ -848,7 +1014,6 @@
         function closeDineinModal() {
             document.getElementById('dineinModal').classList.remove('active');
             document.getElementById('overlay').classList.remove('active');
-            pendingOrderType = null;
         }
 
         function confirmDineInOrder() {
@@ -860,13 +1025,12 @@
             const requests = document.getElementById('dineinRequests').value;
             
             if (!name || !phone || !date) {
-                showNotification('Please fill all reservation details!', 'error');
+                Swal.fire('Error', 'Please fill all required fields!', 'error');
                 return;
             }
             
             const reservation = {
                 id: Date.now(),
-                type: 'reservation',
                 name: name,
                 phone: phone,
                 guests: guests,
@@ -876,112 +1040,177 @@
                 dateTime: new Date().toLocaleString(),
                 status: 'confirmed'
             };
+            
             reservations.unshift(reservation);
             localStorage.setItem('restaurantReservations', JSON.stringify(reservations));
             
-            placeOrder('Dine-in');
+            placeOrder('Dine-in', reservation);
             closeDineinModal();
         }
 
-        function placeOrder(orderType) {
+        function placeOrder(orderType, reservation = null) {
             const total = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
             const order = {
                 id: Date.now(),
-                type: 'food',
                 items: [...cart],
                 total: total,
                 orderType: orderType,
-                date: new Date().toLocaleString(),
-                status: 'pending'
+                dateTime: new Date().toLocaleString(),
+                status: 'pending',
+                reservation: reservation
             };
+            
             orders.unshift(order);
             localStorage.setItem('restaurantOrders', JSON.stringify(orders));
             
             cart = [];
+            selectedOrderType = null;
             updateCart();
             closeCart();
             displayOrders();
-            showNotification(`Order placed successfully! (${orderType})`, 'success');
-        }
-
-        function submitReservation() {
-            const name = document.getElementById('resName').value;
-            const phone = document.getElementById('resPhone').value;
-            const guests = document.getElementById('resGuests').value;
-            const date = document.getElementById('resDate').value;
-            const time = document.getElementById('resTime').value;
-            const requests = document.getElementById('resRequests').value;
             
-            if (!name || !phone || !date) {
-                showNotification('Please fill all fields!', 'error');
-                return;
-            }
+            Swal.fire({
+                icon: 'success',
+                title: 'Order Placed!',
+                text: `Your ${orderType} order has been placed successfully!`,
+                timer: 2000,
+                showConfirmButton: false
+            });
             
-            const reservation = {
-                id: Date.now(),
-                type: 'reservation',
-                name: name,
-                phone: phone,
-                guests: guests,
-                date: date,
-                time: time,
-                requests: requests,
-                dateTime: new Date().toLocaleString(),
-                status: 'confirmed'
-            };
-            reservations.unshift(reservation);
-            localStorage.setItem('restaurantReservations', JSON.stringify(reservations));
-            displayOrders();
-            showNotification('Table reserved successfully!', 'success');
-            
-            document.getElementById('resName').value = '';
-            document.getElementById('resPhone').value = '';
-            document.getElementById('resRequests').value = '';
+            // Reset order type selection UI
+            document.querySelectorAll('.order-type-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
         }
 
         function displayOrders() {
             let savedOrders = localStorage.getItem('restaurantOrders');
             let savedReservations = localStorage.getItem('restaurantReservations');
+            
             if (savedOrders) orders = JSON.parse(savedOrders);
             if (savedReservations) reservations = JSON.parse(savedReservations);
-            let all = [...orders, ...reservations].sort((a,b) => b.id - a.id);
-            let container = document.getElementById('ordersList');
-            if (all.length === 0) {
-                container.innerHTML = '<div class="empty-orders">No orders or reservations yet.</div>';
-                return;
-            }
-            container.innerHTML = `<div style="display:grid;gap:20px;">${all.map(o => `
-                <div style="background:#f8f9fa;border-radius:15px;padding:15px;border:1px solid #eee;">
-                    <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
-                        <strong>${o.type === 'food' ? '🍽️ Food Order' : '📅 Table Reservation'} #${o.id}</strong>
-                        <span style="background:#fff3cd;padding:2px 8px;border-radius:20px;">${o.status}</span>
+            
+            // Display food orders
+            const ordersContainer = document.getElementById('ordersList');
+            if (!ordersContainer) return;
+            
+            if (orders.length === 0) {
+                ordersContainer.innerHTML = '<div class="empty-state">No food orders yet</div>';
+            } else {
+                ordersContainer.innerHTML = `<div class="orders-grid">${orders.map(order => `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <strong>Order #${order.id}</strong>
+                            <span class="order-status status-${order.status}">${order.status.toUpperCase()}</span>
+                        </div>
+                        <div>${order.items.map(i => `${i.name} x${i.quantity} - Nu. ${i.price * i.quantity}`).join('<br>')}</div>
+                        <div style="margin-top: 10px;"><strong>Total: Nu. ${order.total}</strong></div>
+                        <div style="margin-top: 5px;"><strong>Type:</strong> ${order.orderType}</div>
+                        ${order.reservation ? `<div><strong>Table Reservation:</strong> ${order.reservation.date} at ${order.reservation.time} (${order.reservation.guests} guests)</div>` : ''}
+                        <div style="font-size: 11px; color: #888; margin-top: 10px;">📅 ${order.dateTime}</div>
                     </div>
-                    ${o.type === 'food' ? o.items.map(i => `<div>${i.name} x${i.quantity} (${i.orderType}) - Nu. ${i.price * i.quantity}</div>`).join('') + `<div style="margin-top:10px;font-weight:bold;">Total: Nu. ${o.total}</div>` : `
-                        <div>👤 Name: ${o.name}</div>
-                        <div>📞 Phone: ${o.phone}</div>
-                        <div>👥 Guests: ${o.guests}</div>
-                        <div>📅 Date: ${o.date}</div>
-                        <div>⏰ Time: ${o.time}</div>
-                        ${o.requests ? `<div>📝 Requests: ${o.requests}</div>` : ''}
-                    `}
-                    <div style="font-size:11px;color:#888;margin-top:10px;">📅 ${o.dateTime}</div>
-                </div>
-            `).join('')}</div>`;
+                `).join('')}</div>`;
+            }
+            
+            // Display reservations
+            const reservationsContainer = document.getElementById('reservationsList');
+            if (reservationsContainer) {
+                if (reservations.length === 0) {
+                    reservationsContainer.innerHTML = '<div class="empty-state">No table reservations yet</div>';
+                } else {
+                    reservationsContainer.innerHTML = `<div class="orders-grid">${reservations.map(res => `
+                        <div class="order-card">
+                            <div class="order-header">
+                                <strong>Reservation #${res.id}</strong>
+                                <span class="order-status status-${res.status}">${res.status.toUpperCase()}</span>
+                            </div>
+                            <div><strong>Name:</strong> ${res.name}</div>
+                            <div><strong>Phone:</strong> ${res.phone}</div>
+                            <div><strong>Guests:</strong> ${res.guests}</div>
+                            <div><strong>Date:</strong> ${res.date}</div>
+                            <div><strong>Time:</strong> ${res.time}</div>
+                            ${res.requests ? `<div><strong>Requests:</strong> ${res.requests}</div>` : ''}
+                            <div style="font-size: 11px; color: #888; margin-top: 10px;">📅 Booked on ${res.dateTime}</div>
+                        </div>
+                    `).join('')}</div>`;
+                }
+            }
         }
 
-        function openCart() { document.getElementById('cartSidebar').classList.add('open'); document.getElementById('overlay').classList.add('active'); }
-        function closeCart() { document.getElementById('cartSidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('active'); }
+        // Order Type Selection
+        document.querySelectorAll('.order-type-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const type = this.getAttribute('data-type');
+                if (cart.length > 0) {
+                    Swal.fire({
+                        title: 'Clear Cart?',
+                        text: `Changing order type will clear your cart. Continue?`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, clear cart',
+                        cancelButtonText: 'No'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            cart = [];
+                            updateCart();
+                            selectedOrderType = type === 'dinein' ? 'Dine-in' : 'Takeaway';
+                            document.querySelectorAll('.order-type-btn').forEach(b => b.classList.remove('active'));
+                            this.classList.add('active');
+                            Swal.fire('Mode Selected', `${selectedOrderType} mode selected`, 'success');
+                        }
+                    });
+                } else {
+                    selectedOrderType = type === 'dinein' ? 'Dine-in' : 'Takeaway';
+                    document.querySelectorAll('.order-type-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    Swal.fire('Mode Selected', `${selectedOrderType} mode selected`, 'success');
+                }
+            });
+        });
+
+        // Category buttons - smooth scroll
+        document.querySelectorAll('.cat-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const section = this.getAttribute('data-section');
+                const element = document.getElementById(section);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tab = this.getAttribute('data-tab');
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(`${tab}-tab`).classList.add('active');
+            });
+        });
+
+        function openCart() { 
+            document.getElementById('cartSidebar').classList.add('open'); 
+            document.getElementById('overlay').classList.add('active'); 
+        }
         
-        function showNotification(msg, type) { 
-            let n = document.createElement('div'); 
-            n.textContent = msg; 
-            n.style.cssText = `position:fixed;bottom:20px;right:20px;background:${type==='success'?'#4CAF50':'#e74c3c'};color:white;padding:10px;border-radius:8px;z-index:1002;`;
-            document.body.appendChild(n); 
-            setTimeout(() => n.remove(), 3000); 
+        function closeCart() { 
+            document.getElementById('cartSidebar').classList.remove('open'); 
+            document.getElementById('overlay').classList.remove('active'); 
         }
-
+        
+        // Load everything
         loadMenu();
         displayOrders();
+        
+        // Close modals when clicking overlay
+        document.getElementById('overlay').addEventListener('click', function() {
+            closeCart();
+            closeDineinModal();
+        });
     </script>
 </body>
 </html>

@@ -2,19 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Feedback extends Model
 {
-    use HasFactory;
-
+    // IMPORTANT: Tell Laravel to use the 'feedbacks' table (plural)
+    protected $table = 'feedbacks';
+    
     protected $fillable = [
         'user_id',
-        'user_name',
-        'service_rating',
-        'food_rating',
-        'review'
+        'name',
+        'email',
+        'rating',
+        'comment',
+        'branch',
+        'status'
     ];
 
     public function user()

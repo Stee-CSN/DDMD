@@ -591,6 +591,23 @@
             transform: translateY(-3px);
         }
         
+        /* Loading placeholder for images */
+        .image-wrapper {
+            position: relative;
+            background: #f0f0f0;
+            overflow: hidden;
+        }
+        
+        .image-wrapper::before {
+            content: "Loading...";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #666;
+            font-size: 14px;
+        }
+        
         @media (max-width: 768px) {
             header { 
                 flex-direction: column; 
@@ -645,7 +662,7 @@
 
     <header>
         <div class="logo">
-            <img src="{{ asset('image/logo.png') }}" alt="Yosel Enterprise Logo" class="logo-img" onerror="this.src='https://placehold.co/50x50?text=YE'">
+            <img src="{{ asset('images/logo.png') }}" alt="Yosel Enterprise Logo" class="logo-img" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect width=%2250%22 height=%2250%22 fill=%22%23FF8C00%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22white%22 font-size=%2220%22%3EYE%3C/text%3E%3C/svg%3E'">
             <div class="logo-text">
                 <h1>Yosel Enterprise</h1>
                 <span>Premium Quality Since 2024</span>
@@ -658,9 +675,12 @@
             @auth
                 <span style="color: #FF8C00;">Welcome, {{ Auth::user()->name }}!</span>
                 <a href="{{ route('profile') }}" class="profile-btn">👤 My Profile</a>
-                @if(Auth::user()->is_admin == 1 || Auth::user()->role == 'admin')
+                @if(Auth::user()->is_admin == 1 || Auth::user()->role == 'super_admin')
                     <a href="{{ url('/admin/dashboard') }}" class="admin-btn">👑 Admin Panel</a>
                 @endif
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
                 <button type="button" class="logout-btn" id="customLogoutBtn">Log Out</button>
             @else
                 <a href="{{ route('login') }}">Log in</a>
@@ -690,7 +710,9 @@
         
         <div class="cards">
             <div class="card">
-                <img src="{{ asset('images/branches/snooker-club.jpg') }}" alt="Yosel Snooker Club" class="card-image" onerror="this.src='https://placehold.co/400x200?text=Snooker+Club'">
+                <div class="image-wrapper">
+                    <img src="{{ asset('images/branches/snooker-club.jpg') }}" alt="Yosel Snooker Club" class="card-image" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22200%22%3E%3Crect width=%22400%22 height=%22200%22 fill=%22%23333%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22white%22 font-size=%2220%22%3ESnooker Club%3C/text%3E%3C/svg%3E'">
+                </div>
                 <div class="card-content">
                     <h3>Yosel Snooker Club</h3>
                     <p>Premium tables, great lighting, and a relaxed atmosphere.</p>
@@ -699,7 +721,9 @@
             </div>
 
             <div class="card">
-                <img src="{{ asset('images/branches/restaurant.jpg') }}" alt="Yangkhel Khangza Restaurant" class="card-image" onerror="this.src='https://placehold.co/400x200?text=Restaurant'">
+                <div class="image-wrapper">
+                    <img src="{{ asset('images/branches/restaurant.jpg') }}" alt="Yangkhel Khangza Restaurant" class="card-image" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22200%22%3E%3Crect width=%22400%22 height=%22200%22 fill=%22%23333%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22white%22 font-size=%2220%22%3ERestaurant%3C/text%3E%3C/svg%3E'">
+                </div>
                 <div class="card-content">
                     <h3>Yangkhel Khangza</h3>
                     <p>Delicious, freshly prepared meals for every taste.</p>
@@ -708,7 +732,9 @@
             </div>
 
             <div class="card">
-                <img src="{{ asset('images/branches/gift-shop.jpg') }}" alt="Norphel Bangzay Gift Shop" class="card-image" onerror="this.src='https://placehold.co/400x200?text=Gift+Shop'">
+                <div class="image-wrapper">
+                    <img src="{{ asset('images/branches/gift-shop.jpg') }}" alt="Norphel Bangzay Gift Shop" class="card-image" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22200%22%3E%3Crect width=%22400%22 height=%22200%22 fill=%22%23333%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22white%22 font-size=%2220%22%3EGift Shop%3C/text%3E%3C/svg%3E'">
+                </div>
                 <div class="card-content">
                     <h3>Norphel Bangzay</h3>
                     <p>Find the perfect gift for your loved ones.</p>
@@ -717,7 +743,9 @@
             </div>
 
             <div class="card">
-                <img src="{{ asset('images/branches/enterprise-store.jpg') }}" alt="Yosel Enterprise Store" class="card-image" onerror="this.src='https://placehold.co/400x200?text=Enterprise+Store'">
+                <div class="image-wrapper">
+                    <img src="{{ asset('images/branches/enterprise-store.jpg') }}" alt="Yosel Enterprise Store" class="card-image" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22200%22%3E%3Crect width=%22400%22 height=%22200%22 fill=%22%23333%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22white%22 font-size=%2220%22%3EEnterprise Store%3C/text%3E%3C/svg%3E'">
+                </div>
                 <div class="card-content">
                     <h3>Yosel Enterprise</h3>
                     <p>Premium products and great shopping experience.</p>
@@ -872,6 +900,15 @@
     <div id="toastNotification" class="toast-notification"></div>
 
     <script>
+        // Constants for localStorage keys
+        const STORAGE_KEYS = {
+            RESTAURANT: ['restaurantOrders', 'restaurantReservations', 'restaurantFeedbacks', 'restaurantUsers'],
+            ENTERPRISE: ['enterpriseOrders', 'enterpriseFeedbacks', 'enterpriseCart'],
+            SNOKER: ['snookerFeedbacks', 'snookerBookings'],
+            GIFTSHOP: ['giftShopOrders', 'giftShopCart'],
+            GENERAL: ['cart', 'currentUser']
+        };
+        
         // Toast notification function
         function showToast(message, isError = false) {
             const toast = document.getElementById('toastNotification');
@@ -885,6 +922,15 @@
             setTimeout(() => {
                 toast.classList.remove('show');
             }, 3000);
+        }
+
+        // Clear all localStorage data
+        function clearAllLocalStorage() {
+            // Clear specific keys
+            Object.values(STORAGE_KEYS).flat().forEach(key => localStorage.removeItem(key));
+            // Clear everything else to be safe
+            localStorage.clear();
+            console.log('All localStorage data cleared');
         }
 
         // Modal Functions
@@ -915,6 +961,18 @@
             }
         }
         
+        // Close modals with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    if (modal.style.display === 'block') {
+                        modal.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+            }
+        });
+        
         // ========== IMPROVED LOGOUT FUNCTIONALITY ==========
         @auth
         // Custom logout handler
@@ -924,43 +982,33 @@
                 e.preventDefault();
                 e.stopPropagation();
                 
-                // Clear ALL localStorage data first
-                const keysToClear = [
-                    'restaurantOrders', 'restaurantReservations', 'restaurantFeedbacks',
-                    'enterpriseOrders', 'enterpriseFeedbacks', 'snookerFeedbacks',
-                    'cart', 'giftShopOrders', 'enterpriseCart', 'currentUser',
-                    'restaurantUsers', 'snookerBookings', 'giftShopCart'
-                ];
-                keysToClear.forEach(key => localStorage.removeItem(key));
-                localStorage.clear(); // Clear everything to be safe
+                // Clear ALL localStorage data
+                clearAllLocalStorage();
                 
                 console.log('Logging out - clearing all localStorage data');
                 showToast('Logging out...', false);
                 
-                // Find and submit the actual logout form
-                const logoutForm = document.querySelector('form[action="{{ route('logout') }}"]');
+                // Submit the logout form
+                const logoutForm = document.getElementById('logout-form');
                 if (logoutForm) {
                     // Small delay to show toast before redirect
                     setTimeout(() => {
                         logoutForm.submit();
                     }, 200);
                 } else {
-                    // Fallback - redirect to home with logout parameter
-                    window.location.href = '{{ url('/') }}?logout=success';
+                    // Fallback - redirect to home
+                    setTimeout(() => {
+                        window.location.href = '{{ url('/') }}';
+                    }, 200);
                 }
             });
         }
-        @endguest
+        @endauth
         
         // ========== CLEAR LOCALSTORAGE FOR NON-LOGGED-IN USERS ==========
         @guest
             // Clear all order/reservation data when user is not logged in
-            const keysToClear = [
-                'restaurantOrders', 'restaurantReservations', 'restaurantFeedbacks',
-                'enterpriseOrders', 'enterpriseFeedbacks', 'snookerFeedbacks',
-                'cart', 'giftShopOrders', 'enterpriseCart'
-            ];
-            keysToClear.forEach(key => localStorage.removeItem(key));
+            clearAllLocalStorage();
             console.log('Guest user - localStorage cleared for security');
         @endguest
         
@@ -978,6 +1026,15 @@
         }
         
         if (totalSlides > 0) {
+            // Preload slide images
+            slides.forEach(slide => {
+                const bgImage = slide.style.backgroundImage;
+                if (bgImage && bgImage !== 'none') {
+                    const img = new Image();
+                    img.src = bgImage.replace(/url\(['"]?(.*?)['"]?\)/i, '$1');
+                }
+            });
+            
             setInterval(changeSlide, 5000);
         }
         
@@ -995,6 +1052,30 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
+        // Image error handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                img.addEventListener('error', function() {
+                    // If the inline SVG fallback fails, create a simple colored div
+                    if (this.src.includes('data:image/svg+xml')) {
+                        // Create a canvas fallback
+                        const canvas = document.createElement('canvas');
+                        canvas.width = this.width || 400;
+                        canvas.height = this.height || 200;
+                        const ctx = canvas.getContext('2d');
+                        ctx.fillStyle = '#333';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        ctx.fillStyle = '#fff';
+                        ctx.font = '20px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(this.alt || 'Image', canvas.width/2, canvas.height/2);
+                        this.src = canvas.toDataURL();
+                    }
+                });
+            });
+        });
+        
         // Check for logout success parameter on page load
         window.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -1005,13 +1086,13 @@
             }
             
             // Ensure home section is visible on page load
-            const homeLink = document.getElementById('homeLink');
             const branchesSection = document.getElementById('branches');
             
             if (window.location.hash === '#branches' && branchesSection) {
-                // Do nothing, branches will be shown
-            } else if (homeLink) {
-                // Make sure home is active
+                setTimeout(() => {
+                    branchesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            } else {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         });
@@ -1024,9 +1105,39 @@
                 const branches = document.getElementById('branches');
                 if (branches) {
                     branches.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Update URL hash without jumping
+                    history.pushState(null, null, '#branches');
                 }
             });
         }
+        
+        // Smooth scroll for hero button
+        const heroButton = document.querySelector('.hero .btn');
+        if (heroButton) {
+            heroButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                const branches = document.getElementById('branches');
+                if (branches) {
+                    branches.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    history.pushState(null, null, '#branches');
+                }
+            });
+        }
+
+        // Handle all internal anchor links for smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    e.preventDefault();
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    history.pushState(null, null, targetId);
+                }
+            });
+        });
     </script>
 </body>
 </html>

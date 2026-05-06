@@ -29,8 +29,21 @@
         .logo-text h1 { font-size: 24px; color: #FF8C00; }
         .logo-text span { font-size: 10px; color: #888; display: block; }
         
-        nav a { color: white; text-decoration: none; margin-left: 20px; font-weight: bold; transition: color 0.3s; }
+        nav { display: flex; align-items: center; flex-wrap: wrap; gap: 15px; }
+        nav a { color: white; text-decoration: none; font-weight: bold; transition: color 0.3s; }
         nav a:hover { color: #FF8C00; }
+        
+        .reservations-link {
+            background: rgba(255,140,0,0.2);
+            border: 1px solid #FF8C00;
+            padding: 8px 20px;
+            border-radius: 25px;
+        }
+        
+        .reservations-link:hover {
+            background: #FF8C00;
+            color: #222 !important;
+        }
         
         .logout-btn {
             background: rgba(255,255,255,0.2);
@@ -39,6 +52,10 @@
             padding: 8px 20px;
             border-radius: 25px;
             cursor: pointer;
+        }
+        
+        .logout-btn:hover {
+            background: #e74c3c;
         }
         
         /* Hero Slideshow */
@@ -98,6 +115,22 @@
         .dot.active { background: #FF8C00; width: 30px; border-radius: 10px; }
         
         .container { max-width: 1400px; margin: -40px auto 60px; padding: 0 20px; position: relative; z-index: 10; }
+        
+        /* Alert Messages */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .alert-success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .alert-error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
         
         /* Rules Card */
         .rules-card {
@@ -189,18 +222,12 @@
             width: 100%;
             height: 220px;
             object-fit: cover;
-            background: linear-gradient(135deg, #FF8C00, #ffa733);
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 60px;
-            color: white;
-        }
-        
-        .table-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            font-size: 80px;
+            color: #FF8C00;
         }
         
         .table-info {
@@ -208,7 +235,7 @@
         }
         
         .table-name {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
             color: #222;
             margin-bottom: 8px;
@@ -224,6 +251,7 @@
         .table-price {
             color: #FF8C00;
             font-weight: bold;
+            font-size: 16px;
             margin-bottom: 15px;
         }
         
@@ -241,6 +269,7 @@
         
         .select-table-btn:hover {
             background: #ffa733;
+            transform: translateY(-2px);
         }
         
         .select-table-btn.selected {
@@ -270,7 +299,7 @@
             background: white;
             border-radius: 20px;
             padding: 30px;
-            max-width: 500px;
+            max-width: 550px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
@@ -313,20 +342,25 @@
             color: #e74c3c;
         }
         
-        .booking-detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #eee;
+        .form-group {
+            margin-bottom: 20px;
         }
         
-        .booking-detail-label {
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
             font-weight: bold;
             color: #555;
         }
         
-        .booking-detail-value {
-            color: #333;
+        .form-group select,
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
         }
         
         .total-price {
@@ -336,6 +370,7 @@
             margin-top: 15px;
             padding-top: 15px;
             border-top: 2px solid #FF8C00;
+            text-align: center;
         }
         
         .confirm-booking {
@@ -364,9 +399,16 @@
             padding: 30px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             margin-top: 30px;
+            scroll-margin-top: 100px;
         }
         
-        .section-title { font-size: 24px; color: #222; margin-bottom: 25px; border-left: 4px solid #FF8C00; padding-left: 15px; }
+        .section-title {
+            font-size: 24px;
+            color: #222;
+            margin-bottom: 25px;
+            border-left: 4px solid #FF8C00;
+            padding-left: 15px;
+        }
         
         .reservations-grid {
             display: grid;
@@ -382,7 +424,10 @@
             transition: 0.3s;
         }
         
-        .reservation-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .reservation-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
         
         .reservation-header {
             background: linear-gradient(135deg, #FF8C00, #ffa733);
@@ -391,8 +436,23 @@
             justify-content: space-between;
             align-items: center;
         }
-        .reservation-header h4 { color: #222; font-size: 16px; }
-        .status-badge { background: #fff3cd; padding: 4px 12px; border-radius: 20px; font-size: 11px; color: #856404; }
+        
+        .reservation-header h4 {
+            color: #222;
+            font-size: 16px;
+        }
+        
+        .status-badge {
+            background: #fff3cd;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            color: #856404;
+        }
+        
+        .status-badge.confirmed { background: #d4edda; color: #155724; }
+        .status-badge.cancelled { background: #f8d7da; color: #721c24; }
+        .status-badge.completed { background: #d1ecf1; color: #0c5460; }
         
         .reservation-body { padding: 15px; }
         .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
@@ -410,17 +470,33 @@
             margin-top: 15px;
             transition: 0.3s;
         }
+        
         .cancel-btn:hover { background: #c0392b; }
+        .cancel-btn:disabled { background: #95a5a6; cursor: not-allowed; }
         
-        .empty-state { text-align: center; padding: 50px; color: #888; background: #f8f9fa; border-radius: 15px; }
-        .login-prompt { text-align: center; padding: 40px; background: white; border-radius: 15px; border: 1px solid #eee; }
-        .login-prompt a { color: #FF8C00; text-decoration: none; font-weight: bold; }
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #888;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
         
-        .alert { padding: 15px; border-radius: 10px; margin-bottom: 20px; }
-        .alert-success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
-        .alert-error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .login-prompt {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 15px;
+            border: 1px solid #eee;
+        }
         
-        /* Footer Styles */
+        .login-prompt a {
+            color: #FF8C00;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        /* Footer */
         .footer-section {
             background-color: #1a1a1a;
             color: #ccc;
@@ -454,54 +530,10 @@
             background: #FF8C00;
         }
         
-        .footer-col p {
-            margin-bottom: 12px;
-            line-height: 1.6;
-            color: #aaa;
-        }
-        
-        .footer-col a {
-            color: #ccc;
-            text-decoration: none;
-            display: block;
-            margin-bottom: 10px;
-            transition: color 0.3s;
-        }
-        
-        .footer-col a:hover {
-            color: #FF8C00;
-        }
-        
-        .footer-col .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .social-links a {
-            display: inline-block;
-            width: 35px;
-            height: 35px;
-            background: #333;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-            text-decoration: none;
-        }
-        
-        .social-links a:hover {
-            background: #FF8C00;
-            transform: translateY(-3px);
-        }
+        .footer-col p { margin-bottom: 12px; line-height: 1.6; color: #aaa; }
+        .footer-col a { color: #ccc; text-decoration: none; display: block; margin-bottom: 10px; transition: color 0.3s; }
+        .footer-col a:hover { color: #FF8C00; }
+        .footer-col .contact-item { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
         
         .footer-bottom {
             text-align: center;
@@ -510,11 +542,6 @@
             border-top: 1px solid #333;
             font-size: 12px;
             color: #888;
-        }
-        
-        .footer-bottom a {
-            color: #FF8C00;
-            text-decoration: none;
         }
         
         @media (max-width: 992px) {
@@ -526,10 +553,9 @@
             .slide-overlay h1 { font-size: 28px; }
             .hero-slideshow { height: 350px; }
             .reservations-grid { grid-template-columns: 1fr; }
-            .container { margin: -20px auto 40px; }
-            .footer-container { grid-template-columns: 1fr; gap: 30px; }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <header>
@@ -546,7 +572,8 @@
             @auth
                 <span style="color:#FF8C00;">Hi, {{ Auth::user()->name }}</span>
                 <a href="{{ route('profile') }}">My Profile</a>
-                @if(Auth::user()->is_admin == 1)
+                <a href="#myReservations" class="reservations-link" onclick="scrollToReservations()">📋 My Reservations</a>
+                @if(Auth::user()->is_admin == 1 || Auth::user()->role == 'admin' || Auth::user()->role == 'super_admin')
                     <a href="{{ url('/admin/dashboard') }}">Admin Panel</a>
                 @endif
                 <form method="POST" action="{{ route('logout') }}" style="display: inline;">
@@ -584,7 +611,7 @@
             <div class="slide" style="background-image: url('{{ asset('images/snooker/slide4.jpg') }}');">
                 <div class="slide-overlay">
                     <h1>Book Your Slot Now</h1>
-                    <p>Only Nu. 100 per board • 10 AM - 10 PM</p>
+                    <p>Professional tables • Great atmosphere • Book online</p>
                 </div>
             </div>
             <div class="slide-dots">
@@ -597,24 +624,26 @@
     </div>
 
     <div class="container">
+        <!-- Show success/error messages -->
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+        @if(session('error'))
+            <div class="alert alert-error">{{ session('error') }}</div>
+        @endif
+
         <!-- Rules & Regulations -->
         <div class="rules-card">
             <h2>📜 Club Rules</h2>
             <ul class="rules-list">
                 <li><span class="rule-number">1.</span><span>All players must maintain silence in the room and respect each other during the game/match.</span></li>
-                <li><span class="rule-number">2.</span><span>Follow the signs placed on the walls for smoking, drinking, and eating. Smoking is discouraged in the playing room.</span></li>
+                <li><span class="rule-number">2.</span><span>Follow the signs placed on the walls for smoking, drinking, and eating.</span></li>
                 <li><span class="rule-number">3.</span><span>Food and drinks can be ordered and will be delivered to you.</span></li>
-                <li><span class="rule-number">4.</span><span>No players should come and play snooker after you are fully drunk. Our staff will escort you out if needed.</span></li>
+                <li><span class="rule-number">4.</span><span>No players should come and play snooker after you are fully drunk.</span></li>
                 <li><span class="rule-number">5.</span><span>No drinks, eating, or smoking is allowed while playing.</span></li>
                 <li><span class="rule-number">6.</span><span>Please do not keep glasses on the snooker table.</span></li>
                 <li><span class="rule-number">7.</span><span>Fighting or quarreling will be reported to authorities.</span></li>
-                <li><span class="rule-number">8.</span><span>Damage to equipment must be paid for (see damage charges below).</span></li>
-                <li><span class="rule-number">9.</span><span>Players must take care of cue sticks, balls, and snooker boards.</span></li>
-                <li><span class="rule-number">10.</span><span>Do not sit on the snooker board.</span></li>
-                <li><span class="rule-number">11.</span><span>Return cue sticks to the stand after finishing.</span></li>
-                <li><span class="rule-number">12.</span><span>Keep toilets clean for next users.</span></li>
-                <li><span class="rule-number">13.</span><span>CCTV is in operation for security.</span></li>
-                <li><span class="rule-number">14.</span><span>Please pay all bills before leaving.</span></li>
+                <li><span class="rule-number">8.</span><span>Damage to equipment must be paid for.</span></li>
             </ul>
             
             <div class="damage-box">
@@ -632,40 +661,40 @@
             </div>
         </div>
 
-        <!-- Available Tables Section -->
+        <!-- Available Tables Section - Only 2 Tables -->
         <div class="tables-section" id="tablesSection">
             <h2 class="tables-title">🎯 Available Tables</h2>
             <div class="tables-grid" id="tablesGrid">
-                <!-- Tables will be loaded here -->
+                <!-- 2 Tables will be loaded here -->
             </div>
         </div>
 
         @auth
             <!-- My Reservations Section -->
-            <div class="reservations-section">
+            <div class="reservations-section" id="myReservations">
                 <h2 class="section-title">📋 My Reservations</h2>
                 @if(isset($bookings) && $bookings->count() > 0)
                     <div class="reservations-grid">
                         @foreach($bookings as $booking)
-                            <div class="reservation-card">
+                            <div class="reservation-card" data-booking-id="{{ $booking->id }}">
                                 <div class="reservation-header">
-                                    <h4>{{ $booking->table_type ?? 'Table Booking' }}</h4>
-                                    <span class="status-badge">{{ ucfirst($booking->status) }}</span>
+                                    <h4>{{ ucfirst($booking->table_type) }} Table</h4>
+                                    <span class="status-badge {{ $booking->status }}">{{ ucfirst($booking->status) }}</span>
                                 </div>
                                 <div class="reservation-body">
-                                    <div class="info-row"><span class="info-label">📅 Date</span><span class="info-value">{{ date('F j, Y', strtotime($booking->booking_date)) }}</span></div>
-                                    <div class="info-row"><span class="info-label">⏰ Time</span><span class="info-value">{{ date('g:i A', strtotime($booking->start_time)) }}</span></div>
-                                    <div class="info-row"><span class="info-label">👥 Players</span><span class="info-value">{{ $booking->people_count ?? 2 }}</span></div>
-                                    <div class="info-row"><span class="info-label">💰 Rate</span><span class="info-value">Nu. 100 per board</span></div>
-                                    <div class="info-row"><span class="info-label">💳 Payment</span><span class="info-value">Pay at counter</span></div>
+                                    <div class="info-row"><span class="info-label">📅 Date</span><span class="info-value">{{ \Carbon\Carbon::parse($booking->booking_date)->format('F j, Y') }}</span></div>
+                                    <div class="info-row"><span class="info-label">⏰ Time</span><span class="info-value">{{ \Carbon\Carbon::parse($booking->start_time)->format('g:i A') }}</span></div>
+                                    <div class="info-row"><span class="info-label">⏱️ Duration</span><span class="info-value">{{ $booking->duration_hours }} hour(s)</span></div>
+                                    <div class="info-row"><span class="info-label">👥 Players</span><span class="info-value">{{ $booking->people_count }}</span></div>
+                                    <div class="info-row"><span class="info-label">💰 Total Amount</span><span class="info-value">Nu. {{ number_format($booking->total_amount) }}</span></div>
                                     <div class="info-row"><span class="info-label">📅 Booked on</span><span class="info-value">{{ $booking->created_at->format('M d, Y') }}</span></div>
                                     
                                     @if($booking->status != 'cancelled' && $booking->status != 'completed')
-                                        <form method="POST" action="{{ route('snooker.destroy', $booking->id) }}" onsubmit="return confirm('Are you sure you want to cancel this reservation?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="cancel-btn">❌ Cancel Reservation</button>
-                                        </form>
+                                        <button type="button" 
+                                                class="cancel-btn" 
+                                                onclick="confirmCancelBooking({{ $booking->id }}, '{{ \Carbon\Carbon::parse($booking->booking_date)->format('F j, Y') }}', '{{ \Carbon\Carbon::parse($booking->start_time)->format('g:i A') }}', '{{ ucfirst($booking->table_type) }}')">
+                                            ❌ Cancel Reservation
+                                        </button>
                                     @endif
                                 </div>
                             </div>
@@ -690,12 +719,66 @@
     <div class="modal" id="bookingModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>🎱 Booking Details</h3>
+                <h3>🎱 Book Your Table</h3>
                 <span class="close-modal" onclick="closeBookingModal()">&times;</span>
             </div>
-            <div id="modalBody">
-                <!-- Dynamic content will be loaded here -->
-            </div>
+            <form id="bookingForm" method="POST" action="{{ route('snooker.book') }}">
+                @csrf
+                <div class="form-group">
+                    <label>Selected Table</label>
+                    <input type="text" id="selectedTableName" readonly style="background: #f5f5f5;">
+                    <input type="hidden" name="table_type" id="tableType">
+                </div>
+                <div class="form-group">
+                    <label>Number of Players *</label>
+                    <select name="people_count" required>
+                        <option value="1">1 Player</option>
+                        <option value="2" selected>2 Players</option>
+                        <option value="3">3 Players</option>
+                        <option value="4">4 Players</option>
+                        <option value="5">5 Players</option>
+                        <option value="6">6 Players</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Booking Date *</label>
+                    <input type="date" name="booking_date" min="{{ date('Y-m-d') }}" required>
+                </div>
+                <div class="form-group">
+                    <label>Start Time *</label>
+                    <select name="start_time" required>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="12:00">12:00 PM</option>
+                        <option value="13:00">1:00 PM</option>
+                        <option value="14:00">2:00 PM</option>
+                        <option value="15:00">3:00 PM</option>
+                        <option value="16:00">4:00 PM</option>
+                        <option value="17:00">5:00 PM</option>
+                        <option value="18:00">6:00 PM</option>
+                        <option value="19:00">7:00 PM</option>
+                        <option value="20:00">8:00 PM</option>
+                        <option value="21:00">9:00 PM</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Duration (Hours) *</label>
+                    <select name="duration_hours" id="durationHours" required>
+                        <option value="1">1 hour</option>
+                        <option value="2">2 hours</option>
+                        <option value="3">3 hours</option>
+                        <option value="4">4 hours</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Special Requests (Optional)</label>
+                    <textarea name="special_requests" rows="2" placeholder="Any special requests?"></textarea>
+                </div>
+                <div class="total-price" id="totalPriceDisplay">
+                    Total: Nu. 0
+                </div>
+                <button type="submit" class="confirm-booking">Confirm Booking</button>
+            </form>
         </div>
     </div>
 
@@ -705,22 +788,15 @@
             <div class="footer-col">
                 <h3>Yosel Snooker Club</h3>
                 <p>Premier snooker experience in Dewathang. Professional tables, great atmosphere, and exciting games.</p>
-                <div class="social-links">
-                    <a href="#">📘</a>
-                    <a href="#">📸</a>
-                    <a href="#">🐦</a>
-                </div>
             </div>
-            
             <div class="footer-col">
                 <h3>Quick Links</h3>
                 <a href="{{ url('/') }}">🏠 Home</a>
-                <a href="{{ url('/') }}#branches">🏪 Our Branches</a>
-                <a href="{{ url('/restaurant') }}">🍽️ Restaurant</a>
-                <a href="{{ url('/giftshop') }}">🎁 Gift Shop</a>
-                <a href="{{ url('/shop') }}">🛍️ Enterprise Store</a>
+                <a href="{{ url('/') }}#branches"> Our Branches</a>
+                <a href="{{ url('/restaurant') }}"> Restaurant</a>
+                <a href="{{ url('/giftshop') }}"> Gift Shop</a>
+                <a href="{{ url('/shop') }}"> Yosel Enterprise Store</a>
             </div>
-            
             <div class="footer-col">
                 <h3>Contact Us</h3>
                 <div class="contact-item"><span>📞</span><span>77299776 / 77827571</span></div>
@@ -729,9 +805,8 @@
                 <div class="contact-item"><span>⏰</span><span>10:00 AM - 10:00 PM</span></div>
             </div>
         </div>
-        
         <div class="footer-bottom">
-            <p>&copy; {{ date('Y') }} Yosel Snooker Club - Yosel Enterprise. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+            <p>&copy; {{ date('Y') }} Yosel Snooker Club - Yosel Enterprise. All rights reserved.</p>
         </div>
     </footer>
 
@@ -757,32 +832,27 @@
         
         let slideInterval = setInterval(changeSlide, 5000);
         
-        // Table Data (2 tables with images)
+        // Table Data - ONLY 2 TABLES
         const tables = [
             { 
                 id: 1, 
-                name: "Table #1 - Championship Pro", 
-                type: "Championship Pro 12ft",
-                description: "Professional 12-foot snooker table with premium cloth and perfect cushion response. Ideal for serious players.", 
-                price: 100,
-                image: "{{ asset('images/snooker/table1.jpg') }}",
-                defaultImg: "🎱"
+                name: "Tournament Pro Table", 
+                type: "standard", 
+                description: "Professional 12-foot snooker table with premium cloth, perfect cushion response, and ideal lighting for serious players.", 
+                pricePerHour: 100,
+                icon: "🏆"
             },
             { 
                 id: 2, 
-                name: "Table #2 - Elite Tournament", 
-                type: "Elite Tournament 10ft",
-                description: "High-quality 10-foot tournament table with responsive cushions and perfect lighting. Great for competitive play.", 
-                price: 100,
-                image: "{{ asset('images/snooker/table2.jpg') }}",
-                defaultImg: "🎯"
+                name: "Championship Elite Table", 
+                type: "premium", 
+                description: "High-quality tournament-grade table with superior playing surface, responsive cushions, and perfect for competitive matches.", 
+                pricePerHour: 100,
+                icon: "👑"
             }
         ];
         
         let selectedTable = null;
-        let selectedDate = "";
-        let selectedTime = "";
-        let selectedPlayers = 2;
         
         // Load tables
         function loadTables() {
@@ -790,14 +860,12 @@
             if (!container) return;
             
             container.innerHTML = tables.map(table => `
-                <div class="table-card" data-id="${table.id}">
-                    <div class="table-image">
-                        <img src="${table.image}" alt="${table.name}" onerror="this.parentElement.innerHTML='${table.defaultImg}'">
-                    </div>
+                <div class="table-card" data-id="${table.id}" data-type="${table.type}" data-name="${table.name}" data-price="${table.pricePerHour}">
+                    <div class="table-image">${table.icon}</div>
                     <div class="table-info">
-                        <div class="table-name"> 🎱 ${table.name}</div>
+                        <div class="table-name"> ${table.name}</div>
                         <div class="table-desc">${table.description}</div>
-                        <div class="table-price"> 💰 Nu. ${table.price} per board</div>
+                        <div class="table-price"> Nu. ${table.pricePerHour} per hour</div>
                         <button class="select-table-btn" onclick="selectTable(${table.id})">Select Table</button>
                     </div>
                 </div>
@@ -820,151 +888,132 @@
                 if (btn) btn.textContent = '✓ Selected';
             }
             
+            // Open modal and populate form
             openBookingModal();
         }
         
         function openBookingModal() {
             if (!selectedTable) return;
             
-            const today = new Date().toISOString().split('T')[0];
-            selectedDate = today;
-            selectedTime = "14:00";
-            selectedPlayers = 2;
+            const modal = document.getElementById('bookingModal');
+            const selectedTableName = document.getElementById('selectedTableName');
+            const tableTypeInput = document.getElementById('tableType');
             
-            updateModalContent();
-            document.getElementById('bookingModal').classList.add('active');
+            if (selectedTableName) selectedTableName.value = selectedTable.name;
+            if (tableTypeInput) tableTypeInput.value = selectedTable.type;
+            
+            // Set minimum date to today
+            const dateInput = document.querySelector('input[name="booking_date"]');
+            if (dateInput) {
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.min = today;
+                dateInput.value = today;
+            }
+            
+            // Update price when duration changes
+            const durationSelect = document.getElementById('durationHours');
+            if (durationSelect) {
+                durationSelect.removeEventListener('change', updateTotalPrice);
+                durationSelect.addEventListener('change', updateTotalPrice);
+            }
+            updateTotalPrice();
+            
+            modal.classList.add('active');
         }
         
-        function updateModalContent() {
-            const modalBody = document.getElementById('modalBody');
-            if (!modalBody) return;
-            
-            const totalPrice = 100;
-            
-            modalBody.innerHTML = `
-                <div class="booking-detail-row">
-                    <span class="booking-detail-label">Selected Table:</span>
-                    <span class="booking-detail-value">${selectedTable.name}</span>
-                </div>
-                <div class="booking-detail-row">
-                    <span class="booking-detail-label">Number of Players:</span>
-                    <span class="booking-detail-value">
-                        <select id="peopleCount" style="padding: 8px; border-radius: 8px; border: 1px solid #ddd; width: 100%;">
-                            <option value="1">1 Player</option>
-                            <option value="2" selected>2 Players</option>
-                            <option value="3">3 Players</option>
-                            <option value="4">4 Players</option>
-                            <option value="5">5 Players</option>
-                            <option value="6">6 Players</option>
-                        </select>
-                    </span>
-                </div>
-                <div class="booking-detail-row">
-                    <span class="booking-detail-label">Date:</span>
-                    <span class="booking-detail-value">
-                        <input type="date" id="bookingDate" value="${selectedDate}" min="${new Date().toISOString().split('T')[0]}" style="padding: 8px; border-radius: 8px; border: 1px solid #ddd; width: 100%;">
-                    </span>
-                </div>
-                <div class="booking-detail-row">
-                    <span class="booking-detail-label">Time:</span>
-                    <span class="booking-detail-value">
-                        <select id="bookingTime" style="padding: 8px; border-radius: 8px; border: 1px solid #ddd; width: 100%;">
-                            <option value="10:00">10:00 AM</option>
-                            <option value="11:00">11:00 AM</option>
-                            <option value="12:00">12:00 PM</option>
-                            <option value="13:00">1:00 PM</option>
-                            <option value="14:00" selected>2:00 PM</option>
-                            <option value="15:00">3:00 PM</option>
-                            <option value="16:00">4:00 PM</option>
-                            <option value="17:00">5:00 PM</option>
-                            <option value="18:00">6:00 PM</option>
-                            <option value="19:00">7:00 PM</option>
-                            <option value="20:00">8:00 PM</option>
-                            <option value="21:00">9:00 PM</option>
-                        </select>
-                    </span>
-                </div>
-                <div class="booking-detail-row">
-                    <span class="booking-detail-label">Rate:</span>
-                    <span class="booking-detail-value">Nu. 100 per board</span>
-                </div>
-                <div class="total-price">
-                    <span>Total Price:</span>
-                    <span>Nu. ${totalPrice}</span>
-                </div>
-                <button class="confirm-booking" onclick="confirmBooking()">Confirm Booking</button>
-            `;
-            
-            const dateInput = document.getElementById('bookingDate');
-            const timeSelect = document.getElementById('bookingTime');
-            const peopleSelect = document.getElementById('peopleCount');
-            
-            if (dateInput) {
-                dateInput.addEventListener('change', function() {
-                    selectedDate = this.value;
-                });
-            }
-            if (timeSelect) {
-                timeSelect.addEventListener('change', function() {
-                    selectedTime = this.value;
-                });
-            }
-            if (peopleSelect) {
-                peopleSelect.addEventListener('change', function() {
-                    selectedPlayers = this.value;
-                });
-            }
+        function updateTotalPrice() {
+            if (!selectedTable) return;
+            const duration = document.getElementById('durationHours').value;
+            const total = selectedTable.pricePerHour * duration;
+            document.getElementById('totalPriceDisplay').innerHTML = `Total: Nu. ${total.toLocaleString()}`;
         }
         
         function closeBookingModal() {
             document.getElementById('bookingModal').classList.remove('active');
         }
         
-        function confirmBooking() {
-            const dateInput = document.getElementById('bookingDate');
-            const timeSelect = document.getElementById('bookingTime');
-            const peopleSelect = document.getElementById('peopleCount');
-            
-            const bookingDate = dateInput ? dateInput.value : selectedDate;
-            const bookingTime = timeSelect ? timeSelect.value : selectedTime;
-            const peopleCount = peopleSelect ? peopleSelect.value : selectedPlayers;
-            
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '{{ route("snooker.book") }}';
-            
-            const csrfInput = document.createElement('input');
-            csrfInput.type = 'hidden';
-            csrfInput.name = '_token';
-            csrfInput.value = '{{ csrf_token() }}';
-            form.appendChild(csrfInput);
-            
-            const tableTypeInput = document.createElement('input');
-            tableTypeInput.type = 'hidden';
-            tableTypeInput.name = 'table_type';
-            tableTypeInput.value = selectedTable.type;
-            form.appendChild(tableTypeInput);
-            
-            const dateInputField = document.createElement('input');
-            dateInputField.type = 'hidden';
-            dateInputField.name = 'booking_date';
-            dateInputField.value = bookingDate;
-            form.appendChild(dateInputField);
-            
-            const timeInput = document.createElement('input');
-            timeInput.type = 'hidden';
-            timeInput.name = 'start_time';
-            timeInput.value = bookingTime + ':00';
-            form.appendChild(timeInput);
-            
-            const peopleInput = document.createElement('input');
-            peopleInput.type = 'hidden';
-            peopleInput.name = 'people_count';
-            peopleInput.value = peopleCount;
-            form.appendChild(peopleInput);
-            
-            document.body.appendChild(form);
-            form.submit();
+        function scrollToReservations() {
+            const reservationsSection = document.getElementById('myReservations');
+            if (reservationsSection) {
+                reservationsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+        
+        // Cancel Booking Function with SweetAlert2 Popup
+        function confirmCancelBooking(bookingId, bookingDate, bookingTime, tableType) {
+            Swal.fire({
+                title: 'Are you sure?',
+                html: `
+                    <div style="text-align: left;">
+                        <p>You are about to cancel this booking:</p>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin: 15px 0;">
+                            <strong>🎱 Table:</strong> ${tableType}<br>
+                            <strong>📅 Date:</strong> ${bookingDate}<br>
+                            <strong>⏰ Time:</strong> ${bookingTime}
+                        </div>
+                        <p style="color: #e74c3c;"><strong>⚠️ Note:</strong> This action cannot be undone!</p>
+                    </div>
+                `,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#e74c3c',
+                cancelButtonColor: '#95a5a6',
+                confirmButtonText: 'Yes, cancel booking!',
+                cancelButtonText: 'No, keep it',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Show loading state
+                    Swal.fire({
+                        title: 'Processing...',
+                        text: 'Cancelling your booking',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    // Send AJAX request to cancel booking
+                    fetch(`/snooker/${bookingId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        credentials: 'same-origin'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Cancelled!',
+                                text: data.message,
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                // Reload the page to show updated status
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: data.message || 'Failed to cancel booking. Please try again.'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Network error. Please try again.'
+                        });
+                    });
+                }
+            });
         }
         
         window.onclick = function(event) {

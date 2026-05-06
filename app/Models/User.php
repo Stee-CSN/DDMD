@@ -35,11 +35,27 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
-        return $this->is_admin === true || $this->role === 'admin';
+        return $this->is_admin === true || $this->role === 'admin' || $this->role === 'super_admin';
     }
 
+    public function isSuperAdmin()
+    {
+        return $this->role === 'super_admin' || $this->is_admin == 1;
+    }
+
+    // Relationships
     public function snookerBookings()
     {
         return $this->hasMany(SnookerBooking::class);
+    }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
+
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class);
     }
 }
